@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Gif Search Engine!</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- <link rel="stylesheet" type="text/css" media="screen" href="main.css" /> -->
+    <!-- <script src="main.js"></script> -->
+
+    <!-- jQuery -->
+    <script
+    src="https://code.jquery.com/jquery-3.3.1.js"
+    integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+    crossorigin="anonymous">
+    </script>
+</head>
+<body>
+    <!-- Need search bar and button for adding buttons -->
+    <form id="gif-form">
+        <label for="search-input">Search gifs</label>
+        <input type="text" id="search-input" required>
+        
+        <input type="submit" id="add-term" value="create new button">
+    </form>
+    
+    <div id="search-terms"></div>
+
+
+
+
+    <!-- Script Start -->
+    <script type="text/javascript" defer>
+        var queryURL;
+        var search='';
+        var debugVar = null;
+        
+        var topics = ["cats", "cars", "money", "video games"];
+
+        function buttonBuilder() {
+            // clear button div
+            $("#search-terms").empty();
+
+            // repopulate with buttons based on topics length
+            for (var i=0; i<topics.length; i++) {
+                var thisButton = $("<button>").text(topics[i]);
+                thisButton.addClass("topics");
+                thisButton.attr("data-topic", topics[i]);
+
+                thisButton.appendTo("#search-terms");
+            }
+        }
+
+        // when this button is clicked, 
+        // check if topic is in the array, if not
+        // call buttonBuilder 
+        
+        $("#add-term").on("click", function(event) {
+            event.preventDefault();
+
+            var topic = $("#search-input").val();
+            
+            if (topics.indexOf(topic) === -1) {
+                topics.push(topic);
+                // alert(topics);
+                buttonBuilder();
+            }
+            else {
+                alert("This topic is already listed! Please try again.");
+            }
+        })
+
+        // fill page with 10 stills 
+        //data[""0""].images.original_still.url
+
+        // when topics are clicked
+        $(".topics").on("click", function(event) { 
+            event.preventDefault();
+
+            var topic = $(this).attr("data-topic");
+
+            queryURL = "http://api.giphy.com/v1/gifs/search?q=" + topic + "&api_key=te9EQFqo1Vln8joH3KMgLBMHgYjzOYLk&limit=10";
+
+            $.ajax({
+                url: queryURL,
+                method: "GET"
+            }).then(function(response) {
+                console.log(response);
+
+                // debugVar = response;
+
+                for(var i=0; i<response.length; i++){
+                    // console.log(i);
+                }
+            });
+        });
+
+        buttonBuilder();
+
+
+
+        //javascript, jQuery
+        // var xhr = $.get("http://api.giphy.com/v1/gifs/search?q=ryan+gosling&api_key=te9EQFqo1Vln8joH3KMgLBMHgYjzOYLk&limit=5");
+        // xhr.done(function(data) { console.log("success got data", data); });
+
+    </script>
+    
+</body>
+</html>
