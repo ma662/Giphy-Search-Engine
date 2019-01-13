@@ -14,7 +14,7 @@ var topics = ["cats", "cars", "money", "video games"];
 
 
 
-var colorArr = ["#DA70D6", "#DAA520", "#DB7093", "#DCDCDC", "#DDA0DD", "#DEB887", "#E0FFFF", "#E6E6FA", "#E9967A", "#EE82EE", "#EEE8AA", "#F08080"];
+var colorArr = ["#DA70D6", "#DAA520", "#DB7093", "#DCDCDC", "#DDA0DD", "#DEB887", "#E0FFFF", "#E6E6FA", "#E9967A", "#EE82EE", "#EEE8AA", "#F08080", "darkgray", "cornsilk", "burlywood", "azure", "beige", "aliceblue", "cadetblue", "mistyrose", "palevioletred"];
 
 function getRandomInt(max) {
     return Math.floor(Math.random() * Math.floor(max));
