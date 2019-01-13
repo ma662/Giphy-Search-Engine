@@ -1,0 +1,60 @@
+.title {
+    font-weight: bold;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 2em;
+}
+
+.subtitle {
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 1em;
+    margin-bottom: 0.7em;
+    
+    margin: 0.5em auto;
+    padding: 0;
+}
+
+.topics {
+    margin-right: 1.5%;
+    margin-top: 1.5%;
+}
+
+/* Center Stuff */
+.title, #search-terms, form, .subtitle, p {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+.gifs { 
+    opacity: 0.65;
+
+    transition: opacity 550ms;
+}
+.gifs:hover {
+    opacity: 1;
+}
+
+p {
+    color: darkkhaki;
+}
+
+.gif-div {
+    /*stuff */
+    display: inline-block;
+    background-color: rgba(35, 58, 58, 0.74);
+    padding: 1.9%;
+    margin-right: 1.8%;
+    margin-top: 2%;
+    border: 4.5px double darkkhaki;
+}
+
+#bg {
+    border-top: 3px solid lightgreen;
+    position: fixed;
+    top: 8.2em;
+    left: 0;
+    overflow: hidden;
+    z-index: -5;
+    height: 150%;
+    opacity: 0.4;
+}
