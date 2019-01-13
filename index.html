@@ -14,11 +14,72 @@
     integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
     crossorigin="anonymous">
     </script>
+
+
+    <style>
+        .title {
+            font-weight: bold;
+            font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+            font-size: 2em;
+        }
+
+        .subtitle {
+            font-family:Verdana, Geneva, Tahoma, sans-serif;
+            font-size: 1em;
+            margin-bottom: 0.7em;
+            
+            margin: 0.5em auto;
+            padding: 0;
+        }
+
+        .topics {
+            margin-right: 1.5%;
+            margin-top: 1.5%;
+        }
+        
+        /* Center Stuff */
+        .title, #search-terms, form, .subtitle {
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+        }
+
+        .gifs { 
+            display: inline-block;
+            background-color: rgba(35, 58, 58, 0.74);
+
+            padding: 2.2%;
+            margin-right: 1.5%;
+            margin-top: 1.5%;
+            border: 4.5px double darkkhaki;
+            opacity: 0.89;
+
+            transition: opacity 550ms;
+        }
+        .gifs:hover {
+            opacity: 1;
+        }
+
+        #bg {
+            border-top: 3px solid lightgreen;
+            position: fixed;
+            top: 8.2em;
+            left: 0;
+            overflow: hidden;
+            z-index: -5;
+            height: 150%;
+            opacity: 0.4;
+        }
+    </style>
+
 </head>
 <body>
+    <div class="title">The Amazing Gif Search Engine!</div>
+    <p class="subtitle">By Myles Alcala</p>
+
     <!-- Need search bar and button for adding buttons -->
     <form id="gif-form">
-        <label for="search-input">Search gifs</label>
+        <label for="search-input">Search Gifs</label>
         <input type="text" id="search-input" required>
         
         <input type="submit" id="add-term" value="create new button">
@@ -26,16 +87,35 @@
     
     <div id="search-terms"></div>
 
+    <div id="gif-display"></div>
 
 
-
+    <img id="bg" src="./assets/images/bg.jpg" alt="bg">
+    
     <!-- Script Start -->
     <script type="text/javascript" defer>
-        var queryURL;
+
+        var queryURL = '';
         var search='';
         var debugVar = null;
-        
+        var debugVarBool = null;
+        var lastDebugVar = null;
+
         var topics = ["cats", "cars", "money", "video games"];
+        // when this button is clicked, 
+        // check if topic is in the array, if not
+        // call buttonBuilder 
+        // when topics are clicked
+
+
+
+
+
+        var colorArr = ["#DA70D6", "#DAA520", "#DB7093", "#DCDCDC", "#DDA0DD", "#DEB887", "#E0FFFF", "#E6E6FA", "#E9967A", "#EE82EE", "#EEE8AA", "#F08080"];
+
+        function getRandomInt(max) {
+            return Math.floor(Math.random() * Math.floor(max));
+        }
 
         function buttonBuilder() {
             // clear button div
@@ -44,65 +124,126 @@
             // repopulate with buttons based on topics length
             for (var i=0; i<topics.length; i++) {
                 var thisButton = $("<button>").text(topics[i]);
-                thisButton.addClass("topics");
+                
+                var myInt = getRandomInt(colorArr.length - 1);
+                var myColor = colorArr[myInt];
+
+                thisButton.css({
+                    "background-color": myColor
+                });
+                
+                thisButton.attr("class", "topics");
                 thisButton.attr("data-topic", topics[i]);
 
                 thisButton.appendTo("#search-terms");
             }
+
+            // these listeners need to be here everytime buttons are re-rendered
+            // pull and display data from giphy
+            $(".topics").on("click", function(event2) { 
+                $("#gif-display").empty();
+
+                event2.preventDefault();
+                console.log("me too!");
+
+                var topic = $(this).attr("data-topic");
+                console.log("this topic is: " + topic);
+
+                // fill page with 10 stills 
+                //data[""0""].images.original_still.url
+
+                queryURL = "http://api.giphy.com/v1/gifs/search?q=" + topic + "&api_key=te9EQFqo1Vln8joH3KMgLBMHgYjzOYLk&limit=10";
+
+                $.ajax({
+                    url: queryURL,
+                    method: "GET"
+                }).then(function(response) {
+                    console.log(response);
+
+                    debugVar = response;
+
+                    for(var i=0; i<Object.keys(response.data).length; i++) {
+                        console.log(i);
+
+                        // pack in both still and gif links into the gif
+                        var stillURL = response.data[i].images.fixed_height_still.url;
+                        var activeURL = response.data[i].images.fixed_height.url;
+
+                        // var dataArr = [stillURL, activeURL];
+                        
+                        // var anim = false;
+
+                        var newImage = $("<img>");
+                        newImage.addClass("gifs");
+
+                        newImage.attr("data-still", stillURL);
+                        newImage.attr("data-active", activeURL);
+                        newImage.attr("data-animated", 0);
+
+                        newImage.attr("src", stillURL);
+
+                        $("#gif-display").append(newImage);
+                    }
+                    
+
+                    $(".gifs").off().on("click", function(event) {
+                        event.preventDefault();
+                        
+                        var chosen = $(this);
+                        //var anim = false;
+
+                        console.log(this);
+
+                        lastDebugVar = this;
+                        
+                        console.log(this.dataset.animated === false);
+
+                        if(this.dataset.animated == 0) {
+                            // make it animated
+                            chosen.attr("src", this.dataset.active);
+                            console.log("this image status is: " + this.dataset.active);
+                            chosen.attr("data-animated", 1);
+                        }
+                        else { // if give is already animated
+                            // make it still
+                            chosen.attr("src", this.dataset.still);
+                            chosen.attr("data-animated", 0);
+                            // this.dataset.animated = false;
+                        }
+
+                        
+                        // debugVarBool = anim;
+                        // alert("click!");
+                    });
+                });
+            });
         }
 
-        // when this button is clicked, 
-        // check if topic is in the array, if not
-        // call buttonBuilder 
-        
-        $("#add-term").on("click", function(event) {
-            event.preventDefault();
-
-            var topic = $("#search-input").val();
-            
-            if (topics.indexOf(topic) === -1) {
-                topics.push(topic);
-                // alert(topics);
-                buttonBuilder();
-            }
-            else {
-                alert("This topic is already listed! Please try again.");
-            }
-        })
-
-        // fill page with 10 stills 
-        //data[""0""].images.original_still.url
-
-        // when topics are clicked
-        $(".topics").on("click", function(event) { 
-            event.preventDefault();
-
-            var topic = $(this).attr("data-topic");
-
-            queryURL = "http://api.giphy.com/v1/gifs/search?q=" + topic + "&api_key=te9EQFqo1Vln8joH3KMgLBMHgYjzOYLk&limit=10";
-
-            $.ajax({
-                url: queryURL,
-                method: "GET"
-            }).then(function(response) {
-                console.log(response);
-
-                // debugVar = response;
-
-                for(var i=0; i<response.length; i++){
-                    // console.log(i);
-                }
-            });
-        });
-
+        $(document).ready(function() {
+        // run this function initially and then everytime a new term is added
         buttonBuilder();
 
+            $("#add-term").on("click", function(event) {
+                // add new search term
+                console.log("i'm working");
+                
+                event.preventDefault();
 
+                var topic = $("#search-input").val();
+                
+                if (topics.indexOf(topic) === -1 && (topic != '')) {
+                    topics.push(topic);
+                    buttonBuilder();
+                }
+                else if(topics.indexOf(topic) > -1){
+                    alert("This topic is already listed! Please try again.");
+                }
+                else {
+                    alert("That is not a valid topic");
+                }
 
-        //javascript, jQuery
-        // var xhr = $.get("http://api.giphy.com/v1/gifs/search?q=ryan+gosling&api_key=te9EQFqo1Vln8joH3KMgLBMHgYjzOYLk&limit=5");
-        // xhr.done(function(data) { console.log("success got data", data); });
-
+            });
+        }); //end of document ready
     </script>
     
 </body>
