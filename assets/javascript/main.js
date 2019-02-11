@@ -55,7 +55,7 @@ function buttonBuilder() {
         // fill page with 10 stills 
         //data[""0""].images.original_still.url
 
-        queryURL = "https://api.giphy.com/v1/gifs/search?q=" + topic + "&api_key=te9EQFqo1Vln8joH3KMgLBMHgYjzOYLk&limit=10";
+        queryURL = "https://api.giphy.com/v1/gifs/search?q=" + topic + "&api_key=t6jRzP41q18lZZEYYNYMqEIU2qs3PdSa&limit=10";
 
         $.ajax({
             url: queryURL,
